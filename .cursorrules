@@ -1,0 +1,40 @@
+# BharatCMS - India-First Headless CMS
+
+## Tech Stack
+- Strapi v4.25.x with TypeScript
+- PostgreSQL (Supabase)
+- Cloudflare R2 storage
+- Razorpay payments
+- Groq AI
+- Resend email
+- WhatsApp Cloud API
+
+## Architecture Rules
+- All custom features go in src/plugins/
+- Never modify Strapi core (/node_modules/@strapi/)
+- Use TypeScript strict mode
+- Indian context: ₹ currency, GST, Hindi support
+- Multi-tenant ready (workspace field on entities)
+
+## DON'T
+- Don't suggest Stripe (use Razorpay)
+- Don't use AWS S3 (use Cloudflare R2)
+- Don't use OpenAI directly (use Groq for cost)
+- Don't modify Strapi core code
+
+## DO
+- Use Strapi factories pattern
+- Write GST-aware logic (CGST/SGST/IGST)
+- Format prices as ₹X,XX,XXX (Indian style)
+- Use TypeScript types from Strapi
+- Add error handling with strapi.log
+
+## Current Phase
+Phase: 1 (Rebrand)
+Task: 1.2
+
+## File Conventions
+- Plugins: kebab-case (razorpay-service.ts)
+- Components: PascalCase (AIButton.tsx)
+- Content types: lowercase (product, order)
+- Routes: kebab-case (/create-order)
