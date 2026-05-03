@@ -2,7 +2,7 @@
   "name": "bharatcms",
   "private": true,
   "version": "0.1.0",
-  "description": "A Strapi application",
+  "description": "BharatCMS — India's first AI-powered headless CMS with Razorpay, GST, and Hindi support",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -10,21 +10,19 @@
     "strapi": "strapi",
     "deploy": "strapi deploy"
   },
-  "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.25.23",
-    "@strapi/plugin-users-permissions": "4.25.23",
-    "@strapi/plugin-i18n": "4.25.23",
     "@strapi/plugin-cloud": "4.25.23",
+    "@strapi/plugin-i18n": "4.25.23",
+    "@strapi/plugin-users-permissions": "4.25.23",
+    "@strapi/strapi": "4.25.23",
     "better-sqlite3": "8.6.0",
+    "pg": "^8.20.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "5.3.4",
     "styled-components": "5.3.3"
   },
-  "author": {
-    "name": "A Strapi developer"
-  },
+  "author": "Diwakar Kumar",
   "strapi": {
     "uuid": "441b85b5-8450-4458-9e41-13280b2ac2ce"
   },
@@ -32,5 +30,8 @@
     "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/pg": "^8.20.0"
+  }
 }

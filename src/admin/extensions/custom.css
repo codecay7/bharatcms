@@ -1,0 +1,22 @@
+/* Hide Strapi "Join the community" widget */
+[aria-label*="community"],
+[class*="CommunityEdition"],
+a[href*="github.com/strapi"],
+a[href*="discord.strapi.io"],
+a[href*="strapi.io/blog"],
+a[href*="forum.strapi.io"],
+a[href*="strapi.io/careers"],
+a[href*="reddit.com/r/Strapi"] {
+  display: none !important;
+}
+
+/* Hide the entire right-side community panel on homepage */
+main aside,
+[data-strapi-header] ~ div > div:last-child[class*="Box"]:has(a[href*="strapi"]) {
+  display: none !important;
+}
+
+/* BharatCMS brand polish — cyan glow on hover */
+nav a:hover {
+  background: rgba(0, 212, 255, 0.08) !important;
+}
