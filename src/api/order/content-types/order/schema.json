@@ -1,0 +1,69 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": "BharatCMS payment orders"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "razorpay_order_id": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "razorpay_payment_id": {
+      "type": "string"
+    },
+    "razorpay_signature": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "integer",
+      "required": true,
+      "comment": "Amount in paise (₹499 = 49900)"
+    },
+    "currency": {
+      "type": "string",
+      "default": "INR"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "created",
+        "paid",
+        "failed"
+      ],
+      "default": "created",
+      "required": true
+    },
+    "plan": {
+      "type": "enumeration",
+      "enum": [
+        "hobby",
+        "starter",
+        "pro",
+        "business",
+        "lifetime"
+      ]
+    },
+    "customer_email": {
+      "type": "email"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "tenant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::tenant.tenant"
+    }
+  }
+}

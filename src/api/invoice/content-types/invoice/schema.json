@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "invoices",
+  "info": {
+    "singularName": "invoice",
+    "pluralName": "invoices",
+    "displayName": "Invoice",
+    "description": "GST invoices generated for payments"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "invoice_number": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "buyer_name": {
+      "type": "string"
+    },
+    "buyer_email": {
+      "type": "email"
+    },
+    "buyer_gstin": {
+      "type": "string"
+    },
+    "buyer_address": {
+      "type": "text"
+    },
+    "seller_gstin": {
+      "type": "string",
+      "default": "GS29AABCU9603R1ZX"
+    },
+    "items": {
+      "type": "json"
+    },
+    "subtotal": {
+      "type": "decimal"
+    },
+    "cgst": {
+      "type": "decimal"
+    },
+    "sgst": {
+      "type": "decimal"
+    },
+    "igst": {
+      "type": "decimal"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "payment_id": {
+      "type": "string"
+    },
+    "tenant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::tenant.tenant"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "sent",
+        "paid"
+      ],
+      "default": "draft"
+    }
+  }
+}

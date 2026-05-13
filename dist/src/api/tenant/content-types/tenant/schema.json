@@ -1,0 +1,43 @@
+{
+    "kind": "collectionType",
+    "collectionName": "tenants",
+    "info": {
+        "singularName": "tenant",
+        "pluralName": "tenants",
+        "displayName": "Tenant"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "owner_clerk_id": {
+            "type": "string"
+        },
+        "plan": {
+            "type": "enumeration",
+            "enum": [
+                "hobby",
+                "starter",
+                "pro",
+                "business",
+                "lifetime"
+            ]
+        },
+        "status": {
+            "type": "enumeration",
+            "enum": [
+                "active",
+                "inactive",
+                "suspended"
+            ]
+        },
+        "slug": {
+            "type": "uid",
+            "targetField": "name"
+        }
+    }
+}

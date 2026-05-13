@@ -1,0 +1,16 @@
+{
+  "name": "strapi-plugin-razorpay",
+  "version": "0.1.0",
+  "description": "Razorpay payment plugin for BharatCMS",
+  "strapi": {
+    "name": "razorpay",
+    "kind": "plugin",
+    "displayName": "Razorpay",
+    "description": "Razorpay payments for India"
+  },
+  "main": "./strapi-server.js",
+  "files": [
+    "strapi-server.js",
+    "server"
+  ]
+}

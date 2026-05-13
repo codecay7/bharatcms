@@ -1,0 +1,33 @@
+{
+    "kind": "collectionType",
+    "collectionName": "projects",
+    "info": {
+        "singularName": "project",
+        "pluralName": "projects",
+        "displayName": "Project"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "api_key": {
+            "type": "string"
+        },
+        "status": {
+            "type": "enumeration",
+            "enum": [
+                "active",
+                "inactive"
+            ]
+        },
+        "tenant": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::tenant.tenant"
+        }
+    }
+}
