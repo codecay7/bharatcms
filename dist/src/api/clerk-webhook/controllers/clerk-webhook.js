@@ -7,21 +7,31 @@ const svix_1 = require("svix");
 const clerk_sdk_node_1 = __importDefault(require("@clerk/clerk-sdk-node"));
 exports.default = {
     async handle(ctx) {
-        // Verify svix signature (Clerk uses svix signing)
-        const signature = ctx.request.header['svix-signature'] || ctx.request.header['svix_signature'] || '';
         const secret = process.env.CLERK_WEBHOOK_SECRET || '';
-        try {
-            if (secret && secret.length > 0) {
-                const wh = new svix_1.Webhook(secret);
-                // stringify the parsed body to approximate the raw payload
-                wh.verify(JSON.stringify(ctx.request.body), signature);
+        if (secret && secret.length > 0) {
+            const svixId = ctx.request.header['svix-id'];
+            const svixTs = ctx.request.header['svix-timestamp'];
+            const svixSig = ctx.request.header['svix-signature'];
+            if (!svixId || !svixTs || !svixSig) {
+                ctx.status = 401;
+                ctx.body = { error: 'missing svix headers' };
+                return;
             }
-        }
-        catch (err) {
-            // invalid signature
-            ctx.status = 401;
-            ctx.body = { error: 'invalid signature' };
-            return;
+            try {
+                const wh = new svix_1.Webhook(secret);
+                // use raw body captured by middleware if available
+                const raw = ctx.state && ctx.state.rawBody ? ctx.state.rawBody : JSON.stringify(ctx.request.body);
+                wh.verify(raw, {
+                    'svix-id': svixId,
+                    'svix-timestamp': svixTs,
+                    'svix-signature': svixSig,
+                });
+            }
+            catch (err) {
+                ctx.status = 401;
+                ctx.body = { error: 'invalid signature' };
+                return;
+            }
         }
         const { type, data } = ctx.request.body || {};
         if (type === 'user.created') {
@@ -29,7 +39,6 @@ exports.default = {
             const firstName = data.first_name || '';
             const lastName = data.last_name || '';
             const name = `${firstName} ${lastName}`.trim() || clerkId;
-            // check for existing tenant for this clerk user
             const existing = await strapi.entityService.findMany('api::tenant.tenant', {
                 filters: { owner_clerk_id: clerkId },
             });
@@ -38,7 +47,6 @@ exports.default = {
                 saved = existing[0];
             }
             else {
-                // create tenant record with default hobby plan
                 saved = await strapi.entityService.create('api::tenant.tenant', {
                     data: {
                         name,
@@ -49,7 +57,6 @@ exports.default = {
                     },
                 });
             }
-            // Attempt to update Clerk unsafeMetadata with tenantId and plan
             try {
                 if (process.env.CLERK_API_KEY) {
                     await clerk_sdk_node_1.default.users.updateUserMetadata(clerkId, {
@@ -58,7 +65,7 @@ exports.default = {
                 }
             }
             catch (e) {
-                // ignore Clerk update failures in webhook to avoid blocking the flow
+                // ignore
             }
             ctx.body = { received: true, tenantId: saved.id };
             return;
