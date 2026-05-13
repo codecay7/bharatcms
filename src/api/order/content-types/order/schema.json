@@ -13,12 +13,18 @@
   "attributes": {
     "items": { "type": "json", "required": true },
     "subtotal": { "type": "decimal", "required": true },
+    "amount": { "type": "integer" },
     "tax": { "type": "decimal", "default": 0 },
     "total": { "type": "decimal", "required": true },
-    "status": { "type": "enumeration", "enum": ["pending","paid","shipped","delivered","cancelled"], "default": "pending" },
+  "status": { "type": "enumeration", "enum": ["pending","paid","failed","shipped","delivered","cancelled"], "default": "pending" },
+    "plan": { "type": "enumeration", "enum": ["hobby","starter","pro","business","lifetime"] },
     "razorpay_order_id": { "type": "string" },
     "razorpay_payment_id": { "type": "string" },
     "razorpay_signature": { "type": "string" },
+    "currency": { "type": "string", "default": "INR" },
+    "customer_email": { "type": "email" },
+    "customer_name": { "type": "string" },
+    "customer_phone": { "type": "string" },
     "customer": { "type": "relation", "relation": "manyToOne", "target": "api::customer.customer" },
     "tenant": { "type": "relation", "relation": "manyToOne", "target": "api::tenant.tenant" }
   }

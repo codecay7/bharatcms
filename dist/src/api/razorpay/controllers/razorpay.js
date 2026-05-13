@@ -19,6 +19,7 @@ exports.default = {
             // ✅ Lifetime cap check — count paid lifetime orders
             if (plan === 'lifetime') {
                 const lifetimeCount = await strapi.entityService.count('api::order.order', {
+                    // cast filters to any because runtime schema includes `plan` but TS generated types may lag
                     filters: { plan: 'lifetime', status: 'paid' },
                 });
                 if (lifetimeCount >= LIFETIME_CAP) {

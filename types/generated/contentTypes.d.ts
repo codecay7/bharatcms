@@ -362,6 +362,81 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    description: 'Product categories';
+    displayName: 'Category';
+    pluralName: 'categories';
+    singularName: 'category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.Text;
+    name: Attribute.String & Attribute.Required;
+    products: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'api::product.product'
+    >;
+    slug: Attribute.UID<'api::category.category', 'name'> & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiCustomerCustomer extends Schema.CollectionType {
+  collectionName: 'customers';
+  info: {
+    description: 'Storefront customers';
+    displayName: 'Customer';
+    pluralName: 'customers';
+    singularName: 'customer';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::customer.customer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    email: Attribute.Email & Attribute.Required;
+    name: Attribute.String & Attribute.Required;
+    phone: Attribute.String;
+    tenant: Attribute.Relation<
+      'api::customer.customer',
+      'manyToOne',
+      'api::tenant.tenant'
+    >;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::customer.customer',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiInvoiceInvoice extends Schema.CollectionType {
   collectionName: 'invoices';
   info: {
@@ -414,7 +489,7 @@ export interface ApiInvoiceInvoice extends Schema.CollectionType {
 export interface ApiOrderOrder extends Schema.CollectionType {
   collectionName: 'orders';
   info: {
-    description: 'BharatCMS payment orders';
+    description: 'Customer orders';
     displayName: 'Order';
     pluralName: 'orders';
     singularName: 'order';
@@ -423,7 +498,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    amount: Attribute.Integer & Attribute.Required;
+    amount: Attribute.Integer;
     createdAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::order.order',
@@ -432,26 +507,83 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     > &
       Attribute.Private;
     currency: Attribute.String & Attribute.DefaultTo<'INR'>;
+    customer: Attribute.Relation<
+      'api::order.order',
+      'manyToOne',
+      'api::customer.customer'
+    >;
     customer_email: Attribute.Email;
     customer_name: Attribute.String;
     customer_phone: Attribute.String;
+    items: Attribute.JSON & Attribute.Required;
     plan: Attribute.Enumeration<
       ['hobby', 'starter', 'pro', 'business', 'lifetime']
     >;
-    razorpay_order_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    razorpay_order_id: Attribute.String;
     razorpay_payment_id: Attribute.String;
     razorpay_signature: Attribute.String;
-    status: Attribute.Enumeration<['created', 'paid', 'failed']> &
-      Attribute.Required &
-      Attribute.DefaultTo<'created'>;
+    status: Attribute.Enumeration<
+      ['pending', 'paid', 'failed', 'shipped', 'delivered', 'cancelled']
+    > &
+      Attribute.DefaultTo<'pending'>;
+    subtotal: Attribute.Decimal & Attribute.Required;
+    tax: Attribute.Decimal & Attribute.DefaultTo<0>;
     tenant: Attribute.Relation<
       'api::order.order',
+      'manyToOne',
+      'api::tenant.tenant'
+    >;
+    total: Attribute.Decimal & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
       'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductProduct extends Schema.CollectionType {
+  collectionName: 'products';
+  info: {
+    description: 'Products for storefront';
+    displayName: 'Product';
+    pluralName: 'products';
+    singularName: 'product';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    category: Attribute.Relation<
+      'api::product.product',
+      'manyToOne',
+      'api::category.category'
+    >;
+    comparePrice: Attribute.Decimal;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    description: Attribute.RichText;
+    images: Attribute.Media<undefined, true>;
+    isActive: Attribute.Boolean & Attribute.DefaultTo<true>;
+    name: Attribute.String & Attribute.Required;
+    price: Attribute.Decimal & Attribute.Required;
+    slug: Attribute.UID<'api::product.product', 'name'> & Attribute.Required;
+    stock: Attribute.Integer & Attribute.DefaultTo<0>;
+    tenant: Attribute.Relation<
+      'api::product.product',
+      'manyToOne',
       'api::tenant.tenant'
     >;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
-      'api::order.order',
+      'api::product.product',
       'oneToOne',
       'admin::user'
     > &
@@ -968,8 +1100,11 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::category.category': ApiCategoryCategory;
+      'api::customer.customer': ApiCustomerCustomer;
       'api::invoice.invoice': ApiInvoiceInvoice;
       'api::order.order': ApiOrderOrder;
+      'api::product.product': ApiProductProduct;
       'api::project.project': ApiProjectProject;
       'api::tenant.tenant': ApiTenantTenant;
       'plugin::content-releases.release': PluginContentReleasesRelease;

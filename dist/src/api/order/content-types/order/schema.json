@@ -5,65 +5,27 @@
         "singularName": "order",
         "pluralName": "orders",
         "displayName": "Order",
-        "description": "BharatCMS payment orders"
+        "description": "Customer orders"
     },
     "options": {
         "draftAndPublish": false
     },
     "attributes": {
-        "razorpay_order_id": {
-            "type": "string",
-            "unique": true,
-            "required": true
-        },
-        "razorpay_payment_id": {
-            "type": "string"
-        },
-        "razorpay_signature": {
-            "type": "string"
-        },
-        "amount": {
-            "type": "integer",
-            "required": true,
-            "comment": "Amount in paise (₹499 = 49900)"
-        },
-        "currency": {
-            "type": "string",
-            "default": "INR"
-        },
-        "status": {
-            "type": "enumeration",
-            "enum": [
-                "created",
-                "paid",
-                "failed"
-            ],
-            "default": "created",
-            "required": true
-        },
-        "plan": {
-            "type": "enumeration",
-            "enum": [
-                "hobby",
-                "starter",
-                "pro",
-                "business",
-                "lifetime"
-            ]
-        },
-        "customer_email": {
-            "type": "email"
-        },
-        "customer_name": {
-            "type": "string"
-        },
-        "customer_phone": {
-            "type": "string"
-        },
-        "tenant": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::tenant.tenant"
-        }
+        "items": { "type": "json", "required": true },
+        "subtotal": { "type": "decimal", "required": true },
+        "amount": { "type": "integer" },
+        "tax": { "type": "decimal", "default": 0 },
+        "total": { "type": "decimal", "required": true },
+        "status": { "type": "enumeration", "enum": ["pending", "paid", "failed", "shipped", "delivered", "cancelled"], "default": "pending" },
+        "plan": { "type": "enumeration", "enum": ["hobby", "starter", "pro", "business", "lifetime"] },
+        "razorpay_order_id": { "type": "string" },
+        "razorpay_payment_id": { "type": "string" },
+        "razorpay_signature": { "type": "string" },
+        "currency": { "type": "string", "default": "INR" },
+        "customer_email": { "type": "email" },
+        "customer_name": { "type": "string" },
+        "customer_phone": { "type": "string" },
+        "customer": { "type": "relation", "relation": "manyToOne", "target": "api::customer.customer" },
+        "tenant": { "type": "relation", "relation": "manyToOne", "target": "api::tenant.tenant" }
     }
 }

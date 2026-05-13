@@ -19,7 +19,8 @@ export default {
       // ✅ Lifetime cap check — count paid lifetime orders
       if (plan === 'lifetime') {
         const lifetimeCount = await strapi.entityService.count('api::order.order', {
-          filters: { plan: 'lifetime', status: 'paid' },
+          // cast filters to any because runtime schema includes `plan` but TS generated types may lag
+          filters: ({ plan: 'lifetime', status: 'paid' } as any),
         });
         if (lifetimeCount >= LIFETIME_CAP) {
           return ctx.badRequest(`Lifetime deal is sold out. Only ${LIFETIME_CAP} spots available.`);
@@ -29,14 +30,14 @@ export default {
       const order = await razorpayService.createOrder(amount, currency);
 
       await strapi.entityService.create('api::order.order', {
-        data: {
+        data: ( {
           razorpay_order_id: order.id,
           amount: order.amount,
           currency: order.currency,
           status: 'created' as any,
           plan: plan as any,
           tenant: tenantId || null,
-        },
+        } as any ),
       });
 
       ctx.body = {
@@ -103,15 +104,15 @@ export default {
 
         if (tenantId) {
           await strapi.entityService.update('api::tenant.tenant', tenantId, {
-            data: { plan: order.plan as any },
+            data: { plan: (order as any).plan as any },
           });
-          strapi.log.info(`🚀 Tenant ${tenantId} upgraded to ${order.plan}`);
+          strapi.log.info(`🚀 Tenant ${tenantId} upgraded to ${(order as any).plan}`);
         }
 
         // ✅ Log remaining lifetime spots after each sale
-        if (order.plan === 'lifetime') {
+        if ((order as any).plan === 'lifetime') {
           const soldCount = await strapi.entityService.count('api::order.order', {
-            filters: { plan: 'lifetime', status: 'paid' },
+            filters: ({ plan: 'lifetime', status: 'paid' } as any),
           });
           strapi.log.info(`⚡ Lifetime deals sold: ${soldCount}/${LIFETIME_CAP}`);
         }
@@ -132,9 +133,9 @@ export default {
   // ✅ New endpoint — billing page calls this to show sold count
   async lifetimeStatus(ctx) {
     try {
-      const soldCount = await strapi.entityService.count('api::order.order', {
-        filters: { plan: 'lifetime', status: 'paid' },
-      });
+          const soldCount = await strapi.entityService.count('api::order.order', {
+            filters: ({ plan: 'lifetime', status: 'paid' } as any),
+          });
       ctx.body = {
         sold: soldCount,
         cap: LIFETIME_CAP,

@@ -1,0 +1,20 @@
+{
+    "kind": "collectionType",
+    "collectionName": "customers",
+    "info": {
+        "singularName": "customer",
+        "pluralName": "customers",
+        "displayName": "Customer",
+        "description": "Storefront customers"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "attributes": {
+        "name": { "type": "string", "required": true },
+        "email": { "type": "email", "required": true },
+        "phone": { "type": "string" },
+        "address": { "type": "text" },
+        "tenant": { "type": "relation", "relation": "manyToOne", "target": "api::tenant.tenant" }
+    }
+}
