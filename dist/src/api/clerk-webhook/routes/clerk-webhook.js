@@ -4,7 +4,7 @@ exports.default = {
     routes: [
         {
             method: 'POST',
-            path: '/clerk-webhook',
+            path: '/clerk-webhook/user-created',
             handler: 'clerk-webhook.handle',
             config: {
                 auth: false,

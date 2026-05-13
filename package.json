@@ -11,6 +11,7 @@
     "deploy": "strapi deploy"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@fontsource/noto-sans": "^5.2.10",
     "@pdf-lib/fontkit": "^1.1.1",
     "@strapi/plugin-cloud": "4.25.23",
@@ -24,7 +25,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "5.3.4",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.3",
+    "svix": "^1.93.0"
   },
   "author": "Diwakar Kumar",
   "strapi": {
